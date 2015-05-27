@@ -59,9 +59,9 @@ define windows_ad::organisationalunit(
 
   if($ensure == 'present'){
     exec { "Adding OU - ${ouName}":
-      command     => "import-module activedirectory;New-ADOrganizationalUnit -Name '${ouName}' -Path '${path}' -ProtectedFromAccidentalDeletion $${protectfordeletion}",
-      onlyif      => "if([adsi]::Exists(\"LDAP://OU=${ouName},${path}\")){exit 1}",
-      provider    => powershell,
+      command  => "import-module activedirectory;New-ADOrganizationalUnit -Name '${ouName}' -Path '${path}' -ProtectedFromAccidentalDeletion $${protectfordeletion}",
+      unless   => "[adsi]::Exists(\"LDAP://OU=${ouName},${path}\")",
+      provider => powershell,
     }
   }elsif($ensure == 'absent'){
     exec { "Unprotecting OU - ${ouName}":
